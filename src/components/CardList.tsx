@@ -8,8 +8,8 @@ type CardListProps = {
 export default function CardList({films}: CardListProps): JSX.Element {
   return (
     <div className="catalog__films-list">
-      {films.map((data) => (
-        <CardListItem film_data={data} key={data.id} />
+      {films.slice(0,8).map((data) => (
+        <CardListItem filmData={data} key={data.id} />
       ))}
     </div>
   );

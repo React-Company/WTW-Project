@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 interface LogoLinkProps {
   light: boolean;
@@ -13,5 +13,5 @@ export default function LogoLink({light}:LogoLinkProps) {
         <span className="logo__letter logo__letter--3">W</span>
       </Link>
     </div>
-  )
+  );
 }

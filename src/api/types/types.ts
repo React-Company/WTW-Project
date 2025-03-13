@@ -1,9 +1,9 @@
-import { film } from "../../mocks/films";
+import { film } from '../../mocks/films';
 
 export interface FilmsData {
-  films_data: film[];
+  filmsData: film[];
 }
 
 export interface FilmData {
-  film_data: film;
+  filmData: film;
 }

@@ -1,41 +1,41 @@
-import { FilmData } from "../../api/types/types";
-import { useLoaderData } from "react-router-dom";
-import LogoLink from "../../components/LogoLink";
+import { FilmData } from '../../api/types/types';
+import { useLoaderData } from 'react-router-dom';
+import LogoLink from '../../components/LogoLink';
 
 export default function Film() {
-  const { film_data }: FilmData = useLoaderData() as FilmData;
+  const { filmData }: FilmData = useLoaderData() as FilmData;
 
   const backColor = {
-    backgroundColor: film_data.backgroundColor,
-  }
+    backgroundColor: filmData.backgroundColor,
+  };
 
   const getRatingText = () => {
-    if (film_data.rating === 10) {
-        return 'Awesome';
-    } else if (film_data.rating >= 8) {
-        return 'Very good';
-    } else if (film_data.rating >= 5) {
-        return 'Good';
-    } else if (film_data.rating >= 3) {
-        return 'Normal';
-    } else if (film_data.rating >= 0) {
-        return 'Bad';
+    if (filmData.rating === 10) {
+      return 'Awesome';
+    } else if (filmData.rating >= 8) {
+      return 'Very good';
+    } else if (filmData.rating >= 5) {
+      return 'Good';
+    } else if (filmData.rating >= 3) {
+      return 'Normal';
+    } else if (filmData.rating >= 0) {
+      return 'Bad';
     } else {
-        return 'Invalid score'; 
+      return 'Invalid score';
     }
-};
+  };
 
   return (
     <section className="film-card film-card--full" style={backColor}>
       <div className="film-card__hero">
         <div className="film-card__bg">
-          <img src={film_data.backgroundImage} alt={film_data.name}/>
+          <img src={filmData.backgroundImage} alt={filmData.name}/>
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
 
         <header className="page-header film-card__head">
-        <LogoLink light={false}/>
+          <LogoLink light={false}/>
 
           <ul className="user-block">
             <li className="user-block__item">
@@ -51,10 +51,10 @@ export default function Film() {
 
         <div className="film-card__wrap">
           <div className="film-card__desc">
-            <h2 className="film-card__title">{film_data.name}</h2>
+            <h2 className="film-card__title">{filmData.name}</h2>
             <p className="film-card__meta">
-              <span className="film-card__genre">{film_data.genre}</span>
-              <span className="film-card__year">{film_data.released}</span>
+              <span className="film-card__genre">{filmData.genre}</span>
+              <span className="film-card__year">{filmData.released}</span>
             </p>
 
             <div className="film-card__buttons">
@@ -80,7 +80,7 @@ export default function Film() {
       <div className="film-card__wrap film-card__translate-top">
         <div className="film-card__info">
           <div className="film-card__poster film-card__poster--big">
-            <img src={film_data.posterImage} alt="The Grand Budapest Hotel poster" width="218"
+            <img src={filmData.posterImage} alt="The Grand Budapest Hotel poster" width="218"
               height="327"
             />
           </div>
@@ -101,21 +101,21 @@ export default function Film() {
             </nav>
 
             <div className="film-rating">
-              <div className="film-rating__score">{film_data.rating}</div>
+              <div className="film-rating__score">{filmData.rating}</div>
               <p className="film-rating__meta">
                 <span className="film-rating__level">{getRatingText()}</span>
-                <span className="film-rating__count">{film_data.scoresCount}</span>
+                <span className="film-rating__count">{filmData.scoresCount}</span>
               </p>
             </div>
 
             <div className="film-card__text">
               <p>
-                {film_data.description}
+                {filmData.description}
               </p>
 
-              <p className="film-card__director"><strong>Director: {film_data.director}</strong></p>
+              <p className="film-card__director"><strong>Director: {filmData.director}</strong></p>
 
-              <p className="film-card__starring"><strong>Starring: {film_data.starring.map((star) => star).join(', ')}</strong>
+              <p className="film-card__starring"><strong>Starring: {filmData.starring.map((star) => star).join(', ')}</strong>
               </p>
             </div>
           </div>

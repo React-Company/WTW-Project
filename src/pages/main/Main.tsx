@@ -1,18 +1,13 @@
 import { Link, useLoaderData } from 'react-router-dom';
 import CardList from '../../components/CardList.tsx';
-import { FilmsData } from '../../api/types/types.ts';
 import LogoLink from '../../components/LogoLink.tsx';
+import {MainLoaderData} from './MainLoader.ts';
 
-type MainProps = {
-  name: string;
-  genre: string;
-  year: number;
-}
 
-function Main({name, genre, year}: MainProps) {
-  const { films_data }: FilmsData = useLoaderData() as FilmsData;
+function Main() {
+  const { favoriteFilm, filmsArray }: MainLoaderData = useLoaderData() as MainLoaderData;
 
-  
+
   return (
     <div>
       <section className="film-card">
@@ -23,9 +18,9 @@ function Main({name, genre, year}: MainProps) {
         <h1 className="visually-hidden">WTW</h1>
 
         <header className="page-header film-card__head">
-        
-        <LogoLink light={false} />
-        
+
+          <LogoLink light={false} />
+
           <ul className="user-block">
             <li className="user-block__item">
               <div className="user-block__avatar">
@@ -41,16 +36,16 @@ function Main({name, genre, year}: MainProps) {
         <div className="film-card__wrap">
           <div className="film-card__info">
             <div className="film-card__poster">
-              <img src="img/the-grand-budapest-hotel-poster.jpg" alt="The Grand Budapest Hotel poster" width="218"
+              <img src={favoriteFilm.posterImage} alt={favoriteFilm.name} width="218"
                 height="327"
               />
             </div>
 
             <div className="film-card__desc">
-              <h2 className="film-card__title">{name}</h2>
+              <h2 className="film-card__title">{favoriteFilm.name}</h2>
               <p className="film-card__meta">
-                <span className="film-card__genre">{genre}</span>
-                <span className="film-card__year">{year}</span>
+                <span className="film-card__genre">{favoriteFilm.genre}</span>
+                <span className="film-card__year">{favoriteFilm.released}</span>
               </p>
 
               <div className="film-card__buttons">
@@ -66,7 +61,7 @@ function Main({name, genre, year}: MainProps) {
                       <use xlinkHref="#add"></use>
                     </svg>
                     <span>My list</span>
-                    <span className="film-card__count">{films_data.filter(film => film.isFavorite).length}</span>
+                    <span className="film-card__count">0</span>
                   </button>
                 </Link>
               </div>
@@ -112,7 +107,7 @@ function Main({name, genre, year}: MainProps) {
             </li>
           </ul>
 
-          <CardList films={films_data}/>
+          <CardList films={filmsArray}/>
 
           <div className="catalog__more">
             <button className="catalog__button" type="button">Show more</button>
@@ -120,7 +115,7 @@ function Main({name, genre, year}: MainProps) {
         </section>
 
         <footer className="page-footer">
-          <LogoLink light={true} />
+          <LogoLink light/>
 
           <div className="copyright">
             <p>© What to watch Ltd.</p>

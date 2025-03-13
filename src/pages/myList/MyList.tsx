@@ -4,11 +4,11 @@ import { FilmsData } from '../../api/types/types.ts';
 import LogoLink from '../../components/LogoLink.tsx';
 
 export default function MyList() {
-  const { films_data }: FilmsData = useLoaderData() as FilmsData;
+  const { filmsData }: FilmsData = useLoaderData() as FilmsData;
   return (
     <div className="user-page">
       <header className="page-header user-page__head">
-      <LogoLink light={false}/>
+        <LogoLink light={false}/>
 
         <h1 className="page-title user-page__title">My list <span className="user-page__film-count">9</span></h1>
         <ul className="user-block">
@@ -26,7 +26,7 @@ export default function MyList() {
       <section className="catalog">
         <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-        <CardList films={films_data}/>
+        <CardList films={filmsData}/>
       </section>
 
       <footer className="page-footer">

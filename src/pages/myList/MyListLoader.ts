@@ -1,10 +1,10 @@
-import { film, films } from "../../mocks/films";
+import { film, films } from '../../mocks/films';
 
 export interface MyListLoaderResults {
-  films_data: film[];
+  filmsData: film[];
 }
 
 export function myListLoader(): Promise<MyListLoaderResults> {
-  const films_data = films.filter(film => film.isFavorite);
-  return  Promise.resolve({ films_data });
+  const filmsData = films.filter((filmData) => filmData.isFavorite);
+  return Promise.resolve({ filmsData });
 }

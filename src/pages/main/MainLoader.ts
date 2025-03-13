@@ -1,15 +1,23 @@
-import { FilmsData } from "../../api/types/types";
-import { film, films } from "../../mocks/films";
+import { film } from '../../mocks/films';
 
-//async function searchPromoFilm() {
-//  const res = await fetch("https://12.react.htmlacademy.pro/wtw/promo");
-//  const data: film = await res.json();
-//  
-//  return data;
-//}
+export interface MainLoaderData
+{
+  favoriteFilm: film;
+  filmsArray: film[];
+}
 
-export function mainLoader(): Promise<FilmsData> {
-  const films_data = films;
+export async function mainLoader(): Promise<MainLoaderData> {
+  const favoriteFilmRes = await fetch('https://12.react.htmlacademy.pro/wtw/promo');
+  const favoriteFilm: film = await favoriteFilmRes.json() as film;
 
-  return  Promise.resolve({ films_data });
+  const filmsDataRes = await fetch('https://12.react.htmlacademy.pro/wtw/films');
+  const filmsArray: film[] = await filmsDataRes.json() as film[];
+
+  // eslint-disable-next-line no-console
+  console.log({ favoriteFilm, filmsArray });
+
+  return {
+    favoriteFilm,
+    filmsArray
+  };
 }

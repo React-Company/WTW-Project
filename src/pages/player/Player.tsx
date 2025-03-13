@@ -1,20 +1,12 @@
-import { useLoaderData } from "react-router-dom";
-import { FilmData } from "../../api/types/types";
-import { useRef } from "react";
+import { useLoaderData } from 'react-router-dom';
+import { FilmData } from '../../api/types/types';
 
 export default function Player () {
-  const Vref = useRef<HTMLVideoElement>(null);
-  const { film_data }: FilmData = useLoaderData() as FilmData;
+  const { filmData }: FilmData = useLoaderData() as FilmData;
 
-  const HandlePaly = () => {
-    console.log(Vref.current)
-    if (Vref.current) {
-      Vref.current.play();
-    }
-  }
   return (
     <div className="player">
-      <video src={film_data.videoLink} className="player__video" ref={Vref} onCanPlay={HandlePaly} controls></video>
+      <video src={filmData.videoLink} className="player__video" controls></video>
 
       <button type="button" className="player__exit">Exit</button>
 

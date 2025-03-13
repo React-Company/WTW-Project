@@ -1,11 +1,11 @@
-import LogoLink from "../../components/LogoLink";
+import LogoLink from '../../components/LogoLink';
 
 
 export default function SignInPage() {
   return (
     <div className="user-page">
       <header className="page-header user-page__head">
-        
+
         <LogoLink light={false}/>
 
         <h1 className="page-title user-page__title">Sign in</h1>
@@ -34,7 +34,7 @@ export default function SignInPage() {
       </div>
 
       <footer className="page-footer">
-        <LogoLink light={true}/>
+        <LogoLink light/>
 
         <div className="copyright">
           <p>© What to watch Ltd.</p>
