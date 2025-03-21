@@ -2,25 +2,19 @@ import { useLoaderData } from 'react-router-dom';
 import CardList from '../../components/CardList.tsx';
 import { FilmsData } from '../../api/types/types.ts';
 import LogoLink from '../../components/LogoLink.tsx';
+import UserStatus from '../../components/UserStatus.tsx';
+import {MainLoaderData} from '../main/MainLoader.ts';
 
 export default function MyList() {
   const { filmsData }: FilmsData = useLoaderData() as FilmsData;
+  const { authInfo }: MainLoaderData = useLoaderData() as MainLoaderData;
   return (
     <div className="user-page">
       <header className="page-header user-page__head">
         <LogoLink light={false}/>
 
         <h1 className="page-title user-page__title">My list <span className="user-page__film-count">9</span></h1>
-        <ul className="user-block">
-          <li className="user-block__item">
-            <div className="user-block__avatar">
-              <img src="img/avatar.jpg" alt="User avatar" width="63" height="63"/>
-            </div>
-          </li>
-          <li className="user-block__item">
-            <a className="user-block__link">Sign out</a>
-          </li>
-        </ul>
+        <UserStatus avatar={authInfo.userAuthData.avatarUrl} />
       </header>
 
       <section className="catalog">

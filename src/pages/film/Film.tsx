@@ -1,9 +1,12 @@
 import { FilmData } from '../../api/types/types';
 import {Link, useLoaderData} from 'react-router-dom';
 import LogoLink from '../../components/LogoLink';
+import UserStatus from '../../components/UserStatus.tsx';
+import {MainLoaderData} from '../main/MainLoader.ts';
 
 export default function Film() {
   const { filmData }: FilmData = useLoaderData() as FilmData;
+  const { authInfo }: MainLoaderData = useLoaderData() as MainLoaderData;
 
   const backColor = {
     backgroundColor: filmData.backgroundColor,
@@ -37,16 +40,7 @@ export default function Film() {
         <header className="page-header film-card__head">
           <LogoLink light={false}/>
 
-          <ul className="user-block">
-            <li className="user-block__item">
-              <div className="user-block__avatar">
-                <img src="img/avatar.jpg" alt="User avatar" width="63" height="63"/>
-              </div>
-            </li>
-            <li className="user-block__item">
-              <a className="user-block__link">Sign out</a>
-            </li>
-          </ul>
+          <UserStatus avatar={authInfo.userAuthData.avatarUrl} />
         </header>
 
         <div className="film-card__wrap">
