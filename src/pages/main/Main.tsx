@@ -4,39 +4,38 @@ import CardList from '../../components/CardList.tsx';
 import LogoLink from '../../components/LogoLink.tsx';
 import { MainLoaderData } from './MainLoader.ts';
 import UserStatus from '../../components/UserStatus.tsx';
+import AddMyList from "../../components/AddMyList.tsx";
 
 function Main() {
-  const { favoriteFilm, filmsArray, authInfo } = useLoaderData() as MainLoaderData;
+  const { promoFilm, filmsArray, authInfo, countFavoriteFilm } = useLoaderData() as MainLoaderData;
 
   // Состояние для количества отображаемых фильмов
   const [visibleFilmsCount, setVisibleFilmsCount] = useState(8);
 
-  // Состояние для активного жанра (по умолчанию "All genres")
   const [activeGenre, setActiveGenre] = useState<string>('All genres');
 
-  // Список жанров (можно вынести в отдельный массив или файл)
-  const genres = [
-    'All genres',
-    'Comedies',
-    'Crime',
-    'Documentary',
-    'Dramas',
-    'Horror',
-    'Kids & Family',
-    'Romance',
-    'Sci-Fi',
-    'Thrillers',
-  ];
+  const genres = {
+    'All genres': 'All genres',
+    'Comedies': 'Comedy',
+    'Crime': 'Crime',
+    'Documentary': 'Documentary',
+    'Dramas': 'Drama',
+    'Horror': 'Horror',
+    'Kids & Family': 'Kids & Family',
+    'Romance': 'Romance',
+    'Sci-Fi': 'Sci-Fi',
+    'Thrillers': 'Thriller',
+  } as const;
 
-  // Обработчик для кнопки "Show more"
+  type GenreKey = keyof typeof genres;
+
   const handleShowMore = () => {
     setVisibleFilmsCount((prevCount) => prevCount + 8);
   };
 
-  // Обработчик выбора жанра
-  const handleGenreSelect = (genre: string) => {
-    setActiveGenre(genre);
-    setVisibleFilmsCount(8); // Сбрасываем количество видимых фильмов при смене жанра
+  const handleGenreSelect = (genreKey: GenreKey) => {
+    setActiveGenre(genres[genreKey]);
+    setVisibleFilmsCount(8);
   };
 
   // Фильтруем фильмы по жанру
@@ -52,7 +51,7 @@ function Main() {
     <div>
       <section className="film-card">
         <div className="film-card__bg">
-          <img src={favoriteFilm.backgroundImage} alt="The Grand Budapest Hotel" />
+          <img src={promoFilm.backgroundImage} alt="The Grand Budapest Hotel" />
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -66,23 +65,23 @@ function Main() {
           <div className="film-card__info">
             <div className="film-card__poster">
               <img
-                src={favoriteFilm.posterImage}
-                alt={favoriteFilm.name}
+                src={promoFilm.posterImage}
+                alt={promoFilm.name}
                 width="218"
                 height="327"
               />
             </div>
 
             <div className="film-card__desc">
-              <h2 className="film-card__title">{favoriteFilm.name}</h2>
+              <h2 className="film-card__title">{promoFilm.name}</h2>
               <p className="film-card__meta">
-                <span className="film-card__genre">{favoriteFilm.genre}</span>
-                <span className="film-card__year">{favoriteFilm.released}</span>
+                <span className="film-card__genre">{promoFilm.genre}</span>
+                <span className="film-card__year">{promoFilm.released}</span>
               </p>
 
               <div className="film-card__buttons">
                 <Link
-                  to={`/player/${favoriteFilm.id}`}
+                  to={`/player/${promoFilm.id}`}
                   className="btn btn--play film-card__button"
                   type="button"
                 >
@@ -91,15 +90,7 @@ function Main() {
                   </svg>
                   <span>Play</span>
                 </Link>
-                <Link to="/mylist">
-                  <button className="btn btn--list film-card__button" type="button">
-                    <svg viewBox="0 0 19 20" width="19" height="20">
-                      <use xlinkHref="#add"></use>
-                    </svg>
-                    <span>My list</span>
-                    <span className="film-card__count">0</span>
-                  </button>
-                </Link>
+                <AddMyList countFavoriteFilms={countFavoriteFilm} currentFilmInList={promoFilm.isFavorite} currentFilmId={promoFilm.id} />
               </div>
             </div>
           </div>
@@ -111,11 +102,11 @@ function Main() {
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
           <ul className="catalog__genres-list">
-            {genres.map((genre) => (
+            {(Object.keys(genres) as GenreKey[]).map((genreKey) => (
               <li
-                key={genre}
+                key={genreKey}
                 className={`catalog__genres-item ${
-                  activeGenre === genre ? 'catalog__genres-item--active' : ''
+                  activeGenre === genres[genreKey] ? 'catalog__genres-item--active' : ''
                 }`}
               >
                 <a
@@ -123,10 +114,10 @@ function Main() {
                   className="catalog__genres-link"
                   onClick={(e) => {
                     e.preventDefault(); // Предотвращаем переход по ссылке
-                    handleGenreSelect(genre);
+                    handleGenreSelect(genreKey);
                   }}
                 >
-                  {genre}
+                  {genreKey}
                 </a>
               </li>
             ))}

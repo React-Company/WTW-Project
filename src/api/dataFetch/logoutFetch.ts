@@ -9,10 +9,21 @@ export async function LogoutFetch() {
     await axios.delete('https://12.react.htmlacademy.pro/wtw/logout', {
       headers: { 'X-Token': localDataUser.token },
     });
-    localStorage.removeItem('user'); // Удаляем данные
-    console.log('localStorage after logout:', localStorage.getItem('user')); // Должно быть null
+    localStorage.removeItem('user');
+    // eslint-disable-next-line no-console
+    console.log('localStorage after logout:', localStorage.getItem('user'));
   } catch (error) {
-    console.error('Logout failed:', error.response?.status, error.message);
+    if (axios.isAxiosError(error)) {
+      // eslint-disable-next-line no-console
+      console.error('Logout failed:', error.response?.status, error.message);
+    } else if (error instanceof Error) {
+      // eslint-disable-next-line no-console
+      console.error('Unexpected error:', error.message);
+    } else {
+      // eslint-disable-next-line no-console
+      console.error('Unknown error occurred:', error);
+    }
+
     throw error;
   }
 }

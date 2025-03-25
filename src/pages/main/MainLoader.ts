@@ -1,25 +1,32 @@
-import { film } from '../../mocks/films';
 import {AuthFetch, AuthResponse} from '../../api/dataFetch/authFetch.ts';
+import {PromoFetch} from '../../api/dataFetch/promoFetch.ts';
+import {FilmsFetch} from '../../api/dataFetch/filmsFetch.ts';
+import {film} from '../../mocks/films.ts';
+import {MyListFetch} from '../../api/dataFetch/myListFetch.ts';
 
 export interface MainLoaderData
 {
-  favoriteFilm: film;
+  promoFilm: film;
   filmsArray: film[];
   authInfo: AuthResponse;
+  countFavoriteFilm: number;
 }
 
 export async function mainLoader(): Promise<MainLoaderData> {
-  const favoriteFilmRes = await fetch('https://12.react.htmlacademy.pro/wtw/promo');
-  const favoriteFilm: film = await favoriteFilmRes.json() as film;
-
-  const filmsDataRes = await fetch('https://12.react.htmlacademy.pro/wtw/films');
-  const filmsArray: film[] = await filmsDataRes.json() as film[];
-
+  const promoFilm = await PromoFetch();
+  const filmsArray = await FilmsFetch();
   const authInfo = await AuthFetch();
 
+  let countFavoriteFilm = 0;
+  if (authInfo) {
+    const favoriteFilms: film[] = await MyListFetch();
+    countFavoriteFilm = favoriteFilms.length;
+  }
+
   return {
-    favoriteFilm,
+    promoFilm,
     filmsArray,
-    authInfo
+    authInfo,
+    countFavoriteFilm
   };
 }
