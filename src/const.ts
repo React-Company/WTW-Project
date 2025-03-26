@@ -4,3 +4,9 @@ export enum AuthorizationStatus {
   Unknown = 'UNKNOWN'
 }
 
+export enum TabFilmPage {
+  Overview = 'OVERVIEW',
+  Details = 'DETAILS',
+  Reviews = 'REVIEWS',
+}
+

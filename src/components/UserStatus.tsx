@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { AuthorizationStatus } from '../const.ts';
-import { LogoutFetch } from '../api/dataFetch/logoutFetch.ts';
+import React, {useEffect, useState} from 'react';
+import {AuthorizationStatus} from '../const.ts';
+import {LogoutFetch} from '../api/dataFetch/logoutFetch.ts';
 import {Link} from 'react-router-dom';
-import { FiAlignJustify } from 'react-icons/fi';
+import {FiAlignJustify} from 'react-icons/fi';
+import {AuthFetch} from '../api/dataFetch/authFetch.ts';
 
-export interface UserStatusData {
-  avatar: string;
-}
-
-export default function UserStatus({ avatar }: UserStatusData) {
-  const [authStatus, setAuthStatus] = useState<AuthorizationStatus>(() => {
-    const userJson = localStorage.getItem('user');
-    return userJson ? AuthorizationStatus.Auth : AuthorizationStatus.NoAuth;
-  });
+export default function UserStatus() {
+  const [authorizationStatus, setAuthorizationStatus] = useState<AuthorizationStatus>(AuthorizationStatus.NoAuth);
+  const [avatarUrl, setAvatarUrl] = useState<string>('');
 
   useEffect(() => {
-    const userJson = localStorage.getItem('user');
-    setAuthStatus(userJson ? AuthorizationStatus.Auth : AuthorizationStatus.NoAuth);
+    const checkAuth = async () => {
+      const { authStatus, userAuthData } = await AuthFetch();
+      setAuthorizationStatus(authStatus);
+      setAvatarUrl(userAuthData.avatarUrl);
+    };
+
+    checkAuth();
   }, []);
 
   const handleLogout = async (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     try {
       await LogoutFetch();
-      setAuthStatus(AuthorizationStatus.NoAuth);
+      setAuthorizationStatus(AuthorizationStatus.NoAuth);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Ошибка при выходе:', error);
@@ -31,7 +31,7 @@ export default function UserStatus({ avatar }: UserStatusData) {
   };
 
   return (
-    authStatus === AuthorizationStatus.Auth ? (
+    authorizationStatus === AuthorizationStatus.Auth ? (
       <ul className="user-block">
         <li className="user-block__item">
           <Link className="user-block__link" to="/mylist">
@@ -40,7 +40,7 @@ export default function UserStatus({ avatar }: UserStatusData) {
         </li>
         <li className="user-block__item">
           <div className="user-block__avatar">
-            <img src={avatar} alt="User avatar" width="63" height="63" />
+            <img src={avatarUrl} alt="User avatar" width="63" height="63" />
           </div>
         </li>
         <li className="user-block__item">

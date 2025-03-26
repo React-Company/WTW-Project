@@ -16,10 +16,17 @@ export interface film {
   isFavorite: boolean;
   videoLink: string;
   previewVideoLink: string;
-  reviews: {
-    rating: number;
-    description: string;
-  }[];
+}
+
+export interface reviews {
+  id: number;
+  user: {
+    id: number;
+    name: string;
+  };
+  rating: number;
+  comment: string;
+  date: string;
 }
 
 export const films: film[] = [
@@ -44,8 +51,7 @@ export const films: film[] = [
     id: 1,
     isFavorite: false,
     videoLink: 'https://12.react.htmlacademy.pro/static/film/video/bubbles.mp4',
-    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/dog.mp4',
-    reviews: []
+    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/dog.mp4'
   },
   {
     name: 'Once Upon a Time in America',
@@ -68,8 +74,7 @@ export const films: film[] = [
     id: 2,
     isFavorite: true,
     videoLink: 'https://12.react.htmlacademy.pro/static/film/video/bubbles.mp4',
-    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/dog.mp4',
-    reviews: []
+    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/dog.mp4'
   },
   {
     name: 'Moonrise Kingdom',
@@ -92,8 +97,7 @@ export const films: film[] = [
     id: 3,
     isFavorite: false,
     videoLink: 'https://12.react.htmlacademy.pro/static/film/video/bike.mp4',
-    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/dog.mp4',
-    reviews: []
+    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/dog.mp4'
   },
   {
     name: 'Snatch',
@@ -116,8 +120,7 @@ export const films: film[] = [
     id: 4,
     isFavorite: false,
     videoLink: 'https://12.react.htmlacademy.pro/static/film/video/bubbles.mp4',
-    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/dog.mp4',
-    reviews: []
+    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/dog.mp4'
   },
   {
     name: 'Orlando',
@@ -140,8 +143,7 @@ export const films: film[] = [
     id: 5,
     isFavorite: false,
     videoLink: 'https://12.react.htmlacademy.pro/static/film/video/matrix.mp4',
-    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/traffic.mp4',
-    reviews: []
+    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/traffic.mp4'
   },
   {
     name: 'We need to talk about Kevin',
@@ -164,8 +166,7 @@ export const films: film[] = [
     id: 6,
     isFavorite: false,
     videoLink: 'https://12.react.htmlacademy.pro/static/film/video/bike.mp4',
-    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/dog.mp4',
-    reviews: []
+    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/dog.mp4'
   },
   {
     name: 'A Star Is Born',
@@ -188,8 +189,7 @@ export const films: film[] = [
     id: 7,
     isFavorite: false,
     videoLink: 'https://12.react.htmlacademy.pro/static/film/video/bike.mp4',
-    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/traffic.mp4',
-    reviews: []
+    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/traffic.mp4'
   },
   {
     name: 'Macbeth',
@@ -212,8 +212,7 @@ export const films: film[] = [
     id: 8,
     isFavorite: false,
     videoLink: 'https://12.react.htmlacademy.pro/static/film/video/matrix.mp4',
-    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/traffic.mp4',
-    reviews: []
+    previewVideoLink: 'https://12.react.htmlacademy.pro/static/film/video/traffic.mp4'
   }
 ];
 

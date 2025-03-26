@@ -4,10 +4,10 @@ import CardList from '../../components/CardList.tsx';
 import LogoLink from '../../components/LogoLink.tsx';
 import { MainLoaderData } from './MainLoader.ts';
 import UserStatus from '../../components/UserStatus.tsx';
-import AddMyList from "../../components/AddMyList.tsx";
+import AddMyList from '../../components/AddMyList.tsx';
 
 function Main() {
-  const { promoFilm, filmsArray, authInfo, countFavoriteFilm } = useLoaderData() as MainLoaderData;
+  const { promoFilm, filmsArray, authInfo} = useLoaderData() as MainLoaderData;
 
   // Состояние для количества отображаемых фильмов
   const [visibleFilmsCount, setVisibleFilmsCount] = useState(8);
@@ -58,7 +58,7 @@ function Main() {
 
         <header className="page-header film-card__head">
           <LogoLink light={false} />
-          <UserStatus avatar={authInfo.userAuthData.avatarUrl} />
+          <UserStatus/>
         </header>
 
         <div className="film-card__wrap">
@@ -90,7 +90,7 @@ function Main() {
                   </svg>
                   <span>Play</span>
                 </Link>
-                <AddMyList countFavoriteFilms={countFavoriteFilm} currentFilmInList={promoFilm.isFavorite} currentFilmId={promoFilm.id} />
+                <AddMyList currentFilmId={promoFilm.id} authStatus={authInfo.authStatus} />
               </div>
             </div>
           </div>

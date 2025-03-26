@@ -1,26 +1,24 @@
 import { useLoaderData } from 'react-router-dom';
 import CardList from '../../components/CardList.tsx';
-import { FilmsData } from '../../api/types/types.ts';
 import LogoLink from '../../components/LogoLink.tsx';
 import UserStatus from '../../components/UserStatus.tsx';
-import {MainLoaderData} from '../main/MainLoader.ts';
+import {MyListLoaderResults} from './MyListLoader.ts';
 
 export default function MyList() {
-  const { filmsData }: FilmsData = useLoaderData() as FilmsData;
-  const { authInfo }: MainLoaderData = useLoaderData() as MainLoaderData;
+  const { favoritsFilms } = useLoaderData() as MyListLoaderResults;
   return (
     <div className="user-page">
       <header className="page-header user-page__head">
         <LogoLink light={false}/>
 
-        <h1 className="page-title user-page__title">My list <span className="user-page__film-count">9</span></h1>
-        <UserStatus avatar={authInfo.userAuthData.avatarUrl} />
+        <h1 className="page-title user-page__title">My list <span className="user-page__film-count">{favoritsFilms.length}</span></h1>
+        <UserStatus />
       </header>
 
       <section className="catalog">
         <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-        <CardList films={filmsData}/>
+        <CardList films={favoritsFilms}/>
       </section>
 
       <footer className="page-footer">

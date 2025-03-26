@@ -1,11 +1,13 @@
 import { Params } from 'react-router-dom';
-import { films } from '../../mocks/films';
 import { AuthFetch, AuthResponse } from '../../api/dataFetch/authFetch.ts';
 import { film } from '../../mocks/films';
+import {FilmFetch} from '../../api/dataFetch/filmFetch.ts';
+import {FindRelatedFilmsFetch} from '../../api/dataFetch/findRelatedFilmsFetch.ts';
 
 export interface FilmLoaderData {
-  filmData: film; // Данные одного фильма
-  authInfo: AuthResponse; // Информация об авторизации
+  filmData: film;
+  authInfo: AuthResponse;
+  relatedFilms: film[];
 }
 
 interface LoaderArgs {
@@ -13,18 +15,16 @@ interface LoaderArgs {
 }
 
 export async function filmLoader({ params }: LoaderArgs): Promise<FilmLoaderData> {
-  const id = Number(params.id); // Преобразуем id в число
-  const filmIndex = id - 1; // Индекс начинается с 0, а id с 1
-  const filmData = films[filmIndex]; // Получаем фильм
+  const filmIndex = Number(params.id);
+  const filmData = await FilmFetch(filmIndex);
 
-  if (!filmData || filmIndex < 0 || filmIndex >= films.length) {
-    throw new Response('Film not found', { status: 404 }); // Бросаем ошибку, если фильма нет
-  }
+  const relatedFilms = await FindRelatedFilmsFetch(filmIndex);
 
   const authInfo = await AuthFetch(); // Получаем информацию об авторизации
 
   return {
-    filmData, // Убедились, что filmData существует
+    filmData,
     authInfo,
+    relatedFilms,
   };
 }

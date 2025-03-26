@@ -1,19 +1,41 @@
 import {AddListFetch} from '../api/dataFetch/addListFetch.ts';
-import {useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import {AuthorizationStatus} from '../const.ts';
+import {useEffect, useState} from 'react';
+import {MyListFetch} from '../api/dataFetch/myListFetch.ts';
 
-export interface AddMyListButton {
-  countFavoriteFilms: number;
-  currentFilmInList: boolean;
+interface AddMyListProps {
   currentFilmId: number;
+  authStatus: AuthorizationStatus;
 }
 
-export default function AddMyList({countFavoriteFilms, currentFilmInList, currentFilmId}: AddMyListButton) {
-  const navigate = useNavigate();
+export default function AddMyList({currentFilmId, authStatus}: AddMyListProps) {
+  const [countFavoriteFilms, setCountFavoriteFilms] = useState<number>(0);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        if (authStatus === AuthorizationStatus.Auth) {
+          const favorites = await MyListFetch();
+          setCountFavoriteFilms(favorites.length);
+          // Обновляем статус, если он изменился с момента монтирования
+          setIsFavorite(favorites.some((f) => f.id === currentFilmId));
+        }
+      } catch (error) {
+        // Обработка ошибок
+      }
+    }
+
+    fetchData();
+  }, [authStatus, currentFilmId]);
 
   const handleButton = async () => {
-    await AddListFetch({filmId: currentFilmId, status: currentFilmInList ? 0 : 1})
+    await AddListFetch({filmId: currentFilmId, status: isFavorite ? 0 : 1})
       .then(() => {
-        navigate('/');
+        setIsFavorite(!isFavorite);
+        setCountFavoriteFilms((prev) => isFavorite ? prev - 1 : prev + 1);
       })
       .catch(() => {
         // eslint-disable-next-line no-alert
@@ -22,12 +44,20 @@ export default function AddMyList({countFavoriteFilms, currentFilmInList, curren
   };
 
   return (
+    authStatus === AuthorizationStatus.Auth ?
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    <button className="btn btn--list film-card__button" type="button" onClick={handleButton}>
-      <svg viewBox="0 0 19 20" width="19" height="20">
-        <use xlinkHref={currentFilmInList ? '#in-list' : '#add'}></use>
-      </svg>
-      <span>My list</span><span className="film-card__count">{countFavoriteFilms}</span>
-    </button>
+      <button className="btn btn--list film-card__button" type="submit" onClick={handleButton}>
+        <svg viewBox="0 0 19 20" width="19" height="20">
+          <use xlinkHref={isFavorite ? '#in-list' : '#add'}></use>
+        </svg>
+        <span>My list</span><span className="film-card__count">{countFavoriteFilms}</span>
+      </button>
+      :
+      <Link className="btn btn--list film-card__button" type="button" to="/login">
+        <svg viewBox="0 0 19 20" width="19" height="20">
+          <use xlinkHref='#add'></use>
+        </svg>
+        <span>My list</span><span className="film-card__count">0</span>
+      </Link>
   );
 }

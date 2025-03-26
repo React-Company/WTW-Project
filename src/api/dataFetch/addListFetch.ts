@@ -1,7 +1,7 @@
 import {dataUser, userData} from './loginFetch.ts';
 import axios from 'axios';
 
-export interface AddListFetchParams {
+interface AddListFetchParams {
   filmId: number;
   status: number;
 }
