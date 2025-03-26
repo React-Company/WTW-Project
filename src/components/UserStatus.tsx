@@ -1,30 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {AuthorizationStatus} from '../const.ts';
-import {LogoutFetch} from '../api/dataFetch/logoutFetch.ts';
 import {Link} from 'react-router-dom';
 import {FiAlignJustify} from 'react-icons/fi';
-import {AuthFetch} from '../api/dataFetch/authFetch.ts';
+import {useAuth} from '../hooks/AuthorizationHook.tsx';
 
 export default function UserStatus() {
-  const [authorizationStatus, setAuthorizationStatus] = useState<AuthorizationStatus>(AuthorizationStatus.NoAuth);
-  const [avatarUrl, setAvatarUrl] = useState<string>('');
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { authStatus, userAuthData } = await AuthFetch();
-      setAuthorizationStatus(authStatus);
-      setAvatarUrl(userAuthData.avatarUrl);
-    };
-
-    checkAuth();
-  }, []);
+  const { logout, error, authorizationStatus, userData } = useAuth();
 
   const handleLogout = async (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     try {
-      await LogoutFetch();
-      setAuthorizationStatus(AuthorizationStatus.NoAuth);
-    } catch (error) {
+      await logout();
+    } catch (e) {
       // eslint-disable-next-line no-console
       console.error('Ошибка при выходе:', error);
     }
@@ -40,7 +27,7 @@ export default function UserStatus() {
         </li>
         <li className="user-block__item">
           <div className="user-block__avatar">
-            <img src={avatarUrl} alt="User avatar" width="63" height="63" />
+            <img src={userData.avatarUrl} alt="User avatar" width="63" height="63" />
           </div>
         </li>
         <li className="user-block__item">

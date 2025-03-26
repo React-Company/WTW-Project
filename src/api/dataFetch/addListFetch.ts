@@ -1,5 +1,5 @@
-import {dataUser, userData} from './loginFetch.ts';
 import axios from 'axios';
+import {userDataType} from '../../hooks/AuthorizationHook.tsx';
 
 interface AddListFetchParams {
   filmId: number;
@@ -7,16 +7,18 @@ interface AddListFetchParams {
 }
 
 export async function AddListFetch({filmId, status}: AddListFetchParams) {
-  const userJson = localStorage.getItem('user');
-  const localDataUser: userData = userJson !== null ? JSON.parse(userJson) as userData : dataUser;
+  const storedUser = localStorage.getItem('user');
+  if (storedUser) {
+    const user = JSON.parse(storedUser) as userDataType;
 
-  try {
-    await axios.post(`https://12.react.htmlacademy.pro/wtw/favorite/${filmId}/${status}`, null, {headers: { 'X-Token': localDataUser.token}});
-    // eslint-disable-next-line no-console
-    console.log('Фильм добавлен успешно');
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
-    throw error;
+    try {
+      await axios.post(`https://12.react.htmlacademy.pro/wtw/favorite/${filmId}/${status}`, null, {headers: { 'X-Token': user.token}});
+      // eslint-disable-next-line no-console
+      console.log('Фильм добавлен успешно');
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      throw error;
+    }
   }
 }

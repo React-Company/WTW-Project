@@ -1,13 +1,13 @@
 import { Params } from 'react-router-dom';
-import { AuthFetch, AuthResponse } from '../../api/dataFetch/authFetch.ts';
-import { film } from '../../mocks/films';
+import {film, reviews} from '../../mocks/films';
 import {FilmFetch} from '../../api/dataFetch/filmFetch.ts';
 import {FindRelatedFilmsFetch} from '../../api/dataFetch/findRelatedFilmsFetch.ts';
+import {FilmReviewsFetch} from '../../api/dataFetch/filmReviewsFetch.ts';
 
 export interface FilmLoaderData {
   filmData: film;
-  authInfo: AuthResponse;
   relatedFilms: film[];
+  reviewsData: reviews[];
 }
 
 interface LoaderArgs {
@@ -20,11 +20,11 @@ export async function filmLoader({ params }: LoaderArgs): Promise<FilmLoaderData
 
   const relatedFilms = await FindRelatedFilmsFetch(filmIndex);
 
-  const authInfo = await AuthFetch(); // Получаем информацию об авторизации
+  const reviewsData = await FilmReviewsFetch(filmIndex);
 
   return {
     filmData,
-    authInfo,
     relatedFilms,
+    reviewsData
   };
 }

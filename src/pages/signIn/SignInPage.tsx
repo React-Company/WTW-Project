@@ -1,11 +1,13 @@
 import LogoLink from '../../components/LogoLink';
 import {useState} from 'react';
-import {UserFetch} from '../../api/dataFetch/loginFetch.ts';
 import {useNavigate} from 'react-router-dom';
+import {useAuth} from '../../hooks/AuthorizationHook.tsx';
 
 export default function SignInPage() {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleEmailChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,14 +20,20 @@ export default function SignInPage() {
 
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    await UserFetch({email: email, password: password})
-      .then(() => {
-        navigate('/');
-      })
-      .catch(() => {
-        // eslint-disable-next-line no-alert
-        alert('Произошла ошибка при авторизации.');
-      });
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Некорректный email');
+    } else if (!/[a-zA-Z]/.test(password) || !/\d/.test(password)) {
+      setError('Пароль должен содержать буквы и цифры');
+    } else {
+      await login({email: email, password: password})
+        .then(() => {
+          navigate('/');
+        })
+        .catch(() => {
+          setError('Произошла ошибка при авторизации');
+        });
+    }
   };
 
   return (
@@ -53,6 +61,9 @@ export default function SignInPage() {
               />
               <label className="sign-in__label visually-hidden" htmlFor="user-password">Password</label>
             </div>
+          </div>
+          <div style={{textAlign: 'center', marginTop: '30px', marginBottom: '30px'}}>
+            {error}
           </div>
           <div className="sign-in__submit">
             <button className="sign-in__btn" type="submit">Sign in</button>

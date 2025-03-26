@@ -12,6 +12,9 @@ import PrivateRoute from './components/PrivateRoute.tsx';
 import { mainLoader } from './pages/main/MainLoader.ts';
 import { myListLoader } from './pages/myList/MyListLoader.ts';
 import { filmLoader } from './pages/film/FilmLoader.ts';
+import {AuthProvider} from './hooks/AuthorizationHook.tsx';
+import NoAuthRoute from './components/NoAuthRoute.tsx';
+import {AddReviewLoader} from './pages/addReview/AddReviewLoader.ts';
 
 const router = createBrowserRouter([
   {
@@ -20,9 +23,9 @@ const router = createBrowserRouter([
     children: [
       {index: true, element:<Main />, loader: mainLoader},
       {path:'/mylist', element:<PrivateRoute><MyList /></PrivateRoute>, loader: myListLoader},
-      {path:'/login', element:<SignInPage />},
+      {path:'/login', element:<NoAuthRoute><SignInPage /></NoAuthRoute>},
       {path:'/films/:id', element:<Film />, loader: filmLoader},
-      {path:'/films/:id/review', element:<AddReview/>},
+      {path:'/films/:id/review', element:<PrivateRoute><AddReview/></PrivateRoute>, loader: AddReviewLoader},
       {path:'/player/:id', element:<Player />, loader: filmLoader},
       {path:'*', element:<NotFound />},
     ]
@@ -31,7 +34,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router}></RouterProvider>
+    <AuthProvider><RouterProvider router={router}></RouterProvider></AuthProvider>
   );
 }
 

@@ -7,8 +7,20 @@ import {useState} from 'react';
 import CardList from '../../components/CardList.tsx';
 
 export default function Film() {
-  const { filmData, authInfo, relatedFilms } = useLoaderData() as FilmLoaderData;
+  const { filmData, relatedFilms, reviewsData } = useLoaderData() as FilmLoaderData;
   const [activeFilmTab, setActiveFilmTab] = useState<string>('Overview');
+
+  const firstColumn = reviewsData.slice(0, Math.ceil(reviewsData.length / 2));
+  const secondColumn = reviewsData.slice(Math.ceil(reviewsData.length / 2));
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   const tabs = [
     'Overview',
@@ -84,8 +96,44 @@ export default function Film() {
         );
       case 'Reviews':
         return (
-          <div>
+          <div className="film-card__reviews film-card__row">
 
+            <div className="film-card__reviews-col">
+              {firstColumn.map((review) => (
+                <div className="review" key={review.id} >
+                  <blockquote className="review__quote">
+                    <p className="review__text">{review.comment}</p>
+                    <footer className="review__details">
+                      <cite className="review__author">{review.user.name}</cite>
+                      <time className="review__date" dateTime={review.date}>
+                        {formatDate(review.date)}
+                      </time>
+                    </footer>
+                  </blockquote>
+                  <div className="review__rating">{review.rating.toFixed(1)}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Вторая колонка (если есть отзывы) */}
+            {secondColumn.length > 0 && (
+              <div className="film-card__reviews-col">
+                {secondColumn.map((review) => (
+                  <div className="review" key={review.id}>
+                    <blockquote className="review__quote">
+                      <p className="review__text">{review.comment}</p>
+                      <footer className="review__details">
+                        <cite className="review__author">{review.user.name}</cite>
+                        <time className="review__date" dateTime={review.date}>
+                          {formatDate(review.date)}
+                        </time>
+                      </footer>
+                    </blockquote>
+                    <div className="review__rating">{review.rating.toFixed(1)}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         );
       default:
@@ -145,8 +193,8 @@ export default function Film() {
                   </svg>
                   <span>Play</span>
                 </Link>
-                <AddMyList currentFilmId={filmData.id} authStatus={authInfo.authStatus}></AddMyList>
-                <a href="add-review.html" className="btn film-card__button">Add review</a>
+                <AddMyList currentFilmId={filmData.id}></AddMyList>
+                <Link to={`/films/${filmData.id}/review`} className="btn film-card__button">Add review</Link>
               </div>
             </div>
           </div>
@@ -184,7 +232,7 @@ export default function Film() {
             <section className="catalog catalog--like-this">
               <h2 className="catalog__title">More like this</h2>
 
-              <CardList films={relatedFilms.filter((item) => item.id !== filmData.id)}/>
+              <CardList films={relatedFilms.filter((item) => item.id !== filmData.id).slice(0, 4)}/>
             </section>
             :
             null

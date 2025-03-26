@@ -14,18 +14,22 @@ export default function Player () {
     left: `${progress}%`,
   };
 
-  const formatVideoDuration = (durationInSeconds: number) => {
-    const hours = Math.floor(durationInSeconds / 3600);
-    const minutes = Math.floor((durationInSeconds % 3600) / 60);
-    const seconds = Math.floor(durationInSeconds % 60);
+  function formatDuration(secondsToEnd: number): string {
+    const hours = Math.floor(secondsToEnd / 3600);
+    const minutes = Math.floor((secondsToEnd % 3600) / 60);
+    const seconds = Math.floor(secondsToEnd % 60);
 
-    const formatNumber = (num: number) => String(num).padStart(2, '0');
+    const formattedSecs = seconds.toString().padStart(2, '0');
 
     if (hours > 0) {
-      return `${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`;
+      const formattedMins = minutes.toString().padStart(2, '0');
+      return `${hours}:${formattedMins}:${formattedSecs}`;
+    } else if (minutes > 0) {
+      return `${minutes}:${formattedSecs}`;
+    } else {
+      return `00:${formattedSecs}`;
     }
-    return `${formatNumber(minutes)}:${formatNumber(seconds)}`;
-  };
+  }
 
   const playVideo = () => {
     if (videoRef.current) {
@@ -51,13 +55,14 @@ export default function Player () {
 
   const loadDuration = () => {
     if (videoRef.current) {
-      setVideoDuration(formatVideoDuration(videoRef.current.duration));
+      setVideoDuration(formatDuration(videoRef.current.duration));
     }
   };
 
   const progressChanged = () => {
     if (videoRef.current) {
       setProgress(Number((videoRef.current.currentTime / videoRef.current.duration * 100).toFixed(1)));
+      setVideoDuration(formatDuration(videoRef.current.duration - videoRef.current.currentTime));
     }
   };
 

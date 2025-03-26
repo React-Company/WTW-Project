@@ -2,14 +2,14 @@ import { AuthorizationStatus } from '../const.ts';
 import { Navigate } from 'react-router-dom';
 import {useAuth} from '../hooks/AuthorizationHook.tsx';
 
-const PrivateRoute = ({ children }: { children: JSX.Element }): JSX.Element => {
+const NoAuthRoute = ({ children }: { children: JSX.Element }): JSX.Element => {
   const { authorizationStatus } = useAuth();
 
   return (
-    authorizationStatus === AuthorizationStatus.Auth
+    authorizationStatus === AuthorizationStatus.NoAuth
       ? children
-      : <Navigate to="/login" />
+      : <Navigate to="/" />
   );
 };
 
-export default PrivateRoute;
+export default NoAuthRoute;

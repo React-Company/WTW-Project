@@ -7,7 +7,7 @@ import UserStatus from '../../components/UserStatus.tsx';
 import AddMyList from '../../components/AddMyList.tsx';
 
 function Main() {
-  const { promoFilm, filmsArray, authInfo} = useLoaderData() as MainLoaderData;
+  const { promoFilm, filmsArray} = useLoaderData() as MainLoaderData;
 
   // Состояние для количества отображаемых фильмов
   const [visibleFilmsCount, setVisibleFilmsCount] = useState(8);
@@ -90,7 +90,7 @@ function Main() {
                   </svg>
                   <span>Play</span>
                 </Link>
-                <AddMyList currentFilmId={promoFilm.id} authStatus={authInfo.authStatus} />
+                <AddMyList currentFilmId={promoFilm.id}/>
               </div>
             </div>
           </div>

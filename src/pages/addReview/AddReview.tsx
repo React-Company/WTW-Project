@@ -1,11 +1,72 @@
 import LogoLink from '../../components/LogoLink';
+import UserStatus from '../../components/UserStatus.tsx';
+import {Link, useLoaderData, useNavigate} from 'react-router-dom';
+import {AddReviewLoaderData} from './AddReviewLoader.ts';
+import React, {useState} from 'react';
+import {AddReviewFetch} from '../../api/dataFetch/addReviewFetch.ts';
 
 export default function AddReview() {
+  const { filmData } = useLoaderData() as AddReviewLoaderData;
+  const [rating, setRating] = useState<number>(0);
+  const [comment, setComment] = useState<string>('');
+  const [error, setError] = useState('');
+  const [disabled, setDisabled] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCommentChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setComment(evt.target.value);
+  };
+
+  const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    if (comment.length < 50) {
+      setError('Длина комментария должна быть не менее 50 символов');
+    } else if (comment.length > 400) {
+      setError('Длина комментария должна быть нее более 400 символов');
+    } else {
+      setDisabled(true);
+      await AddReviewFetch({filmId: filmData.id, comment, rating})
+        .then(() => {
+          navigate(`/films/${filmData.id}`);
+        })
+        .catch(() => {
+          setError('Произошла ошибка при отправке комментария');
+        })
+        .finally(() => {
+          setDisabled(false);
+        });
+    }
+  };
+
+  const getTransparentOverlayColor = (hexColor: string) => {
+    const hex = hexColor.replace('#', '');
+
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    const normR = r / 255;
+    const normG = g / 255;
+    const normB = b / 255;
+
+    const luminance = 0.2126 * normR + 0.7152 * normG + 0.0722 * normB;
+
+    return luminance > 0.7
+      ? 'rgba(0, 0, 0, 0.1)'
+      : 'rgba(255, 255, 255, 0.1)';
+  };
+
+  const newColor = getTransparentOverlayColor(filmData.backgroundColor);
+
+  const backColor = {
+    backgroundColor: filmData.backgroundColor,
+  };
   return (
-    <section className="film-card film-card--full">
+    <section className="film-card film-card--full" style={backColor}>
       <div className="film-card__header">
         <div className="film-card__bg">
-          <img src="img/bg-the-grand-budapest-hotel.jpg" alt="The Grand Budapest Hotel"/>
+          <img src={filmData.backgroundImage} alt="The Grand Budapest Hotel"/>
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -16,7 +77,7 @@ export default function AddReview() {
           <nav className="breadcrumbs">
             <ul className="breadcrumbs__list">
               <li className="breadcrumbs__item">
-                <a href="film-page.html" className="breadcrumbs__link">The Grand Budapest Hotel</a>
+                <Link to={`/films/${filmData.id}`} className="breadcrumbs__link">{filmData.name}</Link>
               </li>
               <li className="breadcrumbs__item">
                 <a className="breadcrumbs__link">Add review</a>
@@ -24,66 +85,44 @@ export default function AddReview() {
             </ul>
           </nav>
 
-          <ul className="user-block">
-            <li className="user-block__item">
-              <div className="user-block__avatar">
-                <img src="img/avatar.jpg" alt="User avatar" width="63" height="63"/>
-              </div>
-            </li>
-            <li className="user-block__item">
-              <a className="user-block__link">Sign out</a>
-            </li>
-          </ul>
+          <UserStatus/>
         </header>
 
         <div className="film-card__poster film-card__poster--small">
-          <img src="img/the-grand-budapest-hotel-poster.jpg" alt="The Grand Budapest Hotel poster" width="218"
+          <img src={filmData.posterImage} alt="The Grand Budapest Hotel poster" width="218"
             height="327"
           />
         </div>
       </div>
 
       <div className="add-review">
-        <form action="#" className="add-review__form">
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+        <form aria-disabled={disabled} className="add-review__form" onSubmit={handleSubmit}>
           <div className="rating">
             <div className="rating__stars">
-              <input className="rating__input" id="star-10" type="radio" name="rating" value="10"/>
-              <label className="rating__label" htmlFor="star-10">Rating 10</label>
-
-              <input className="rating__input" id="star-9" type="radio" name="rating" value="9"/>
-              <label className="rating__label" htmlFor="star-9">Rating 9</label>
-
-              <input className="rating__input" id="star-8" type="radio" name="rating" value="8"/>
-              <label className="rating__label" htmlFor="star-8">Rating 8</label>
-
-              <input className="rating__input" id="star-7" type="radio" name="rating" value="7"/>
-              <label className="rating__label" htmlFor="star-7">Rating 7</label>
-
-              <input className="rating__input" id="star-6" type="radio" name="rating" value="6"/>
-              <label className="rating__label" htmlFor="star-6">Rating 6</label>
-
-              <input className="rating__input" id="star-5" type="radio" name="rating" value="5"/>
-              <label className="rating__label" htmlFor="star-5">Rating 5</label>
-
-              <input className="rating__input" id="star-4" type="radio" name="rating" value="4"/>
-              <label className="rating__label" htmlFor="star-4">Rating 4</label>
-
-              <input className="rating__input" id="star-3" type="radio" name="rating" value="3"/>
-              <label className="rating__label" htmlFor="star-3">Rating 3</label>
-
-              <input className="rating__input" id="star-2" type="radio" name="rating" value="2"/>
-              <label className="rating__label" htmlFor="star-2">Rating 2</label>
-
-              <input className="rating__input" id="star-1" type="radio" name="rating" value="1"/>
-              <label className="rating__label" htmlFor="star-1">Rating 1</label>
+              {[10, 9, 8, 7, 6, 5, 4, 3, 2, 1].map((starValue) => (
+                <React.Fragment key={`star-${starValue}`}>
+                  <input
+                    className="rating__input"
+                    id={`star-${starValue}`}
+                    type="radio"
+                    name="rating"
+                    value={starValue}
+                    onChange={() => setRating(starValue)}
+                  />
+                  <label className="rating__label" htmlFor={`star-${starValue}`}>
+                    Rating {starValue}
+                  </label>
+                </React.Fragment>
+              ))}
             </div>
           </div>
 
-          <div className="add-review__text">
+          <div className="add-review__text" style={{backgroundColor: newColor}}>
             <textarea className="add-review__textarea" name="review-text" id="review-text"
               placeholder="Review text"
-            >
-            </textarea>
+              onChange={handleCommentChange}
+            />
             <div className="add-review__submit">
               <button className="add-review__btn" type="submit">Post</button>
             </div>
@@ -91,7 +130,9 @@ export default function AddReview() {
           </div>
         </form>
       </div>
-
+      <div style={{color: 'red', textAlign: 'center', width: '100%', marginTop: '30px'}}>
+        {error}
+      </div>
     </section>
   );
 }
